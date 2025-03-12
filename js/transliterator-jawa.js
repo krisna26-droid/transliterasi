@@ -10,6 +10,7 @@
 * 25 Juli 2013 - v 0.6
 * 11 Februari 2021 - v 0.7
 * 9 Agustus 2021 - v 0.8
+* 12 Maret 2025 - v 0.9
 *
 *
 */
@@ -155,24 +156,25 @@ function transliterate(regexp_file) {
             else if (str[i] == "ꦺ") trans = trans.ganti3(j,"ae"); 
             else if (str[i] == "ꦼ") trans = trans.ganti3(j,"aě"); 
             //str[i] == "ꦶ" || str[i] == "ꦸ" || str[i] == "ꦺ" || str[i] == "ꦼ"
-          } 
-          else if (i > 2 && str[i-1] == "ꦲ") { //-h-
+          } else if (i > 2 && str[i-1] == "ꦲ") { //-h-
             if (str[i] == "ꦴ") trans = trans.ganti2(j,"ā"); 
             else if (str[i] == "ꦶ") trans = trans.ganti2(j,"i"); 
             else if (str[i] == "ꦸ") trans = trans.ganti2(j,"u");
             else if (str[i] == "ꦺ") trans = trans.ganti2(j,"e"); 
             else if (str[i] == "ꦼ") trans = trans.ganti2(j,"ě"); 
+          } else /**/if (i > 0 && str[i] == "ꦴ" && str[i-1] == "ꦺ") { //-o //2 aksara -> 1 huruf
+            trans = trans.ganti2(j, "o");
+          } else if (i > 0 && str[i] == "ꦴ" && str[i-1] == "ꦻ") { //-au //2 aksara -> 2 huruf
+            trans = trans.ganti3(j, "au");
+          } else if (i > 1 && str[i] == "ꦺ" && str[i-1] == "ꦲ" && (str[i-2] == "ꦧ" || str[i-2] == "ꦮ") ) {
+            trans = trans.ganti3(j, "e");
+          } else if (str[i] == "ꦴ") { //-aa
+            trans = trans.ganti(j, "aa"); j++;
+          } else if ( i > 0 && (str[i] == "ꦶ" || str[i] == "ꦸ" || str[i] == "ꦺ" || str[i] == "ꦼ") && (str[i-1] == "ꦄ" || str[i-1] == "ꦌ" || str[i-1] == "ꦆ" || str[i-1] == "ꦎ" || str[i-1] == "ꦈ") ) { 
+            trans = trans.ganti(j, regexp_file[str[i]]); j++;
+          } else { 
+            trans = trans.ganti2(j, regexp_file[str[i]]);
           }
-          else /**/if (i > 0 && str[i] == "ꦴ" && str[i-1] == "ꦺ") //-o //2 aksara -> 1 huruf
-            { trans = trans.ganti2(j, "o"); }
-          else if (i > 0 && str[i] == "ꦴ" && str[i-1] == "ꦻ") //-au //2 aksara -> 2 huruf
-            { trans = trans.ganti3(j, "au"); }
-          else if (str[i] == "ꦴ") //-aa
-            { trans = trans.ganti(j, "aa"); j++; }
-          else if ( i > 0 && (str[i] == "ꦶ" || str[i] == "ꦸ" || str[i] == "ꦺ" || str[i] == "ꦼ") && (str[i-1] == "ꦄ" || str[i-1] == "ꦌ" || str[i-1] == "ꦆ" || str[i-1] == "ꦎ" || str[i-1] == "ꦈ") )
-            { trans = trans.ganti(j, regexp_file[str[i]]); j++; }
-          else 
-            { trans = trans.ganti2(j, regexp_file[str[i]]); }
         } else if (str[i] == "ꦽ" || str[i] == "ꦾ" || str[i] == "ꦿ" || str[i] == "ꦷ" || str[i] == "ꦹ" || str[i] == "ꦻ" || str[i] == "ꦇ" || str[i] == "ꦍ") { //1 aksara -> 2 huruf
           trans = trans.ganti2(j, regexp_file[str[i]]);j++;
         } else if (str[i] == "꦳") {//2 aksara -> 2 huruf
@@ -205,23 +207,22 @@ function transliterate(regexp_file) {
           else { trans = trans.ganti2(j, regexp_file[str[i]]); }
         } else if (str[i] == "꧀") {
           trans = trans.ganti2(j, regexp_file[str[i]]);
-        } else if (str[i] == "ꦏ" || str[i] == "ꦐ" || str[i] == "ꦒ" || str[i] == "ꦕ" || str[i] == "ꦗ" || str[i] == "ꦟ" || str[i] == "ꦠ" || str[i] == "ꦡ" || str[i] == "ꦢ" || str[i] == "ꦣ" || str[i] == "ꦤ" || str[i] == "ꦥ" || str[i] == "ꦧ" || str[i] == "ꦩ" || str[i] == "ꦪ" || str[i] == "ꦫ" || str[i] == "ꦬ" || str[i] == "ꦭ" || str[i] == "ꦮ" || str[i] == "ꦯ" || str[i] == "ꦰ" || str[i] == "ꦱ" || str[i] == "ꦉ" || str[i] == "ꦊ" || str[i] == "ꦁ" || str[i] == "ꦲ" || str[i] == "ꦑ" || str[i] == "ꦓ" || str[i] == "ꦖ" || str[i] == "ꦙ" || str[i] == "ꦡ" || str[i] == "ꦣ" || str[i] == "ꦦ" || str[i] == "ꦨ") {
+        } else if (str[i] == "ꦏ" || str[i] == "ꦐ" || str[i] == "ꦒ" || str[i] == "ꦕ" || str[i] == "ꦗ" || str[i] == "ꦟ" || str[i] == "ꦠ" || str[i] == "ꦡ" || str[i] == "ꦢ" || str[i] == "ꦣ" || str[i] == "ꦤ" || str[i] == "ꦥ" || str[i] == "ꦦ" || str[i] == "ꦧ" || str[i] == "ꦨ" || str[i] == "ꦩ" || str[i] == "ꦪ" || str[i] == "ꦫ" || str[i] == "ꦬ" || str[i] == "ꦭ" || str[i] == "ꦮ" || str[i] == "ꦯ" || str[i] == "ꦰ" || str[i] == "ꦱ" || str[i] == "ꦉ" || str[i] == "ꦊ" || str[i] == "ꦁ" || str[i] == "ꦲ" || str[i] == "ꦑ" || str[i] == "ꦓ" || str[i] == "ꦖ" || str[i] == "ꦙ") {
           if (i > 0 && str[i-1] == "꧊") {
             if (str[i] == "ꦐ") { trans = trans.ganti(j, "Qa");j+=2; }
             else if (str[i] == "ꦧ" || str[i] == "ꦨ") { trans = trans.ganti(j, "Ba");j+=2; }
             else if (str[i] == "ꦕ" || str[i] == "ꦖ") { trans = trans.ganti(j, "Ca");j+=2; }
             else if (str[i] == "ꦢ" || str[i] == "ꦣ") { trans = trans.ganti(j, "Da");j+=2; }
             else if (str[i] == "ꦒ" || str[i] == "ꦓ") { trans = trans.ganti(j, "Ga");j+=2; }
+            else if (i > 1 && str[i] == "ꦁ" && str[i-1] == "ꦶ" && str[i-2] == "ꦲ") { trans = trans.ganti(j, "_ing");j+=4; }
             else if (str[i] == "ꦲ") { 
-		          if ( i > 0 && (str[i-1] == "ꦼ" || str[i-1] == "ꦺ" || str[i-1] == "ꦶ" || str[i-1] == "ꦴ" || str[i-1] == "ꦸ" || str[i-1] == "ꦄ" || str[i-1] == "ꦌ" || str[i-1] == "ꦆ" || str[i-1] == "ꦎ" || str[i-1] == "ꦈ" || 
-		          str[i-1] == "ꦿ" || str[i-1] == "ꦾ" || str[i-1] == "ꦽ") ) { 
-		          	trans = trans.ganti(j, "h"+regexp_file[str[i]]);j+=2; 
-		          }
-		          if ( i > 0 && (str[i-1] == "꧊") ) { 
-		          	trans = trans.ganti(j, "H"+regexp_file[str[i]]);j+=2; 
-		          } else { 
-		          	trans = trans.ganti(j, "@"+regexp_file[str[i]]);j+=2; 
-		          }
+            	if ( i > 0 && (str[i-1] == "ꦼ" || str[i-1] == "ꦺ" || str[i-1] == "ꦶ" || str[i-1] == "ꦴ" || str[i-1] == "ꦸ" || str[i-1] == "ꦄ" || str[i-1] == "ꦌ" || str[i-1] == "ꦆ" || str[i-1] == "ꦎ" || str[i-1] == "ꦈ" || str[i-1] == "ꦿ" || str[i-1] == "ꦾ" || str[i-1] == "ꦽ") ) { 
+            	  trans = trans.ganti(j, "h"+regexp_file[str[i]]);j+=2; 
+            	} if ( i > 0 && (str[i-1] == "꧊") ) { 
+            	  trans = trans.ganti(j, "H"+regexp_file[str[i]]);j+=2; 
+            	} else { 
+            	  trans = trans.ganti(j, "@"+regexp_file[str[i]]);j+=2; 
+            	}
             	//trans = trans.ganti(j, "Ha");j+=2; 
             }
             else if (str[i] == "ꦗ" || str[i] == "ꦙ") { trans = trans.ganti(j, "Ja");j+=2; }
@@ -237,23 +238,21 @@ function transliterate(regexp_file) {
             else if (str[i] == "ꦪ") { trans = trans.ganti(j, "Ya");j+=2; }
             else { trans.ganti(j, regexp_file[str[i]]);j+=3; }
           } else if (i > 0 && str[i] == "ꦲ" && str[i-1] == "ꦃ") { //double hh
-	          trans = trans.ganti(j, "a");j++;
+          	trans = trans.ganti(j, "a");j++;
           } else if (i > 0 && str[i] == "ꦫ" && str[i-1] == "ꦂ") { //double rr
-	          trans = trans.ganti(j, "a");j++;
-	        } else if (i > 0 && str[i] == "ꦔ" && str[i-1] == "ꦁ") { //double ngng
-	          trans = trans.ganti(j, "a");j++;
-	        } else if (i > 1 && str[i] == "ꦕ" &&  str[i-1] == "꧀" &&  str[i-2] == "ꦚ") { //nyj & nyc
-	          trans = trans.ganti(j-3, "nca");
-	        } else if (i > 1 && str[i] == "ꦗ" &&  str[i-1] == "꧀" &&  str[i-2] == "ꦚ") { //nyj & nyc
-	          trans = trans.ganti(j-3, "nja");
-	        } else if (str[i] == "ꦲ" && (i == 0 || [" ", "​", "꧀", "꦳", "ꦴ", "ꦶ", "ꦷ", "ꦸ", "ꦹ", "ꦺ", "ꦻ", "ꦼ", "ꦽ", "ꦾ", "ꦿ"].indexOf(str[i-1]) >= 0)) { //ha, preceeded by space or zws or open vowel
+          	trans = trans.ganti(j, "a");j++;
+          } else if (i > 0 && str[i] == "ꦔ" && str[i-1] == "ꦁ") { //double ngng
+          	trans = trans.ganti(j, "a");j++;
+          } else if (i > 1 && str[i] == "ꦕ" &&  str[i-1] == "꧀" &&  str[i-2] == "ꦚ") { //nyj & nyc
+          	trans = trans.ganti(j-3, "nca");
+          } else if (i > 1 && str[i] == "ꦗ" &&  str[i-1] == "꧀" &&  str[i-2] == "ꦚ") { //nyj & nyc
+          	trans = trans.ganti(j-3, "nja");
+          } else if (str[i] == "ꦲ" /*&& (i == 0 || [" ", "​", "꧀", "꦳", "ꦴ", "ꦶ", "ꦷ", "ꦸ", "ꦹ", "ꦺ", "ꦻ", "ꦼ", "ꦽ", "ꦾ", "ꦿ"].indexOf(str[i-1]) >= 0)*/) { //ha, preceeded by space or zws or open vowel
           	trans = trans.ganti(j, "_a");j+=2; 
-          } else if (str[i] == "ꦑ" || str[i] == "ꦓ" || str[i] == "ꦖ" || str[i] == "ꦙ" || str[i] == "ꦡ" || str[i] == "ꦣ" || str[i] == "ꦦ" || str[i] == "ꦨ") { //bha, cha, dha, dll.
-            trans = trans.ganti(j, regexp_file[str[i]]);j+=3;
           } else {//ba, ca, da, dll.
-            trans = trans.ganti(j, regexp_file[str[i]]);j+=2;
+          	trans = trans.ganti(j, regexp_file[str[i]]);j+=2;
           }
-        } else if (str[i] == "ꦔ" || str[i] == "ꦘ" || str[i] == "ꦚ" || str[i] == "ꦛ" || str[i] == "ꦜ" || str[i] == "ꦝ" || str[i] == "ꦞ" || str[i] == "ꦋ") {//nga, nya, tha, dha
+        } else if (str[i] == "ꦔ" || str[i] == "ꦘ" || str[i] == "ꦚ" || str[i] == "ꦛ" || str[i] == "ꦜ" || str[i] == "ꦝ" || str[i] == "ꦞ" || str[i] == "ꦋ" || str[i] == "ꦑ" || str[i] == "ꦓ" || str[i] == "ꦖ" || str[i] == "ꦙ" || str[i] == "ꦡ" || str[i] == "ꦦ" || str[i] == "ꦨ") {//nga, nya, tha, dha
           if (i > 0 && str[i-1] == "꧊") {
             if (str[i] == "ꦔ") { trans = trans.ganti(j, "Nga");j+=3; }
             else if (str[i] == "ꦚ" || str[i] == "ꦘ") { trans = trans.ganti(j, "Nya");j+=3; }
